@@ -1,9 +1,7 @@
 package game
 
-import (
-	"fmt"
-)
+import ()
 
-func Solve() {
-	fmt.Println("Heyo")
+func Solve(board Board) {
+	PrintBoard(board)
 }

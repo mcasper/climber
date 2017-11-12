@@ -13,7 +13,7 @@ func main() {
 	app.Name = "climbpro"
 
 	app.Action = func(c *cli.Context) {
-		game.Solve()
+		game.Solve(game.TenBoard)
 	}
 
 	app.Run(os.Args)
