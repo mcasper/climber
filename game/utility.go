@@ -21,56 +21,104 @@ func isSolution(board Board) bool {
 	return false
 }
 
-func makeMoves(board Board, allBoardHashes []uint64) []Board {
+func makeMoves(board Board, allBoardHashes []uint64) ([]Board, []uint64) {
 	boards := make([]Board, 0)
 
 	for i := 0; i < len(board.Pieces); i++ {
-		newBoardXLeft := cloneBoard(board)
-		newBoardXLeft.Layer = board.Layer + 1
-		pieceXLeft := newBoardXLeft.Pieces[i]
-		for i2 := 0; i2 < len(pieceXLeft.Coordinates); i2++ {
-			newBoardXLeft.Pieces[i].Coordinates[i2].X = newBoardXLeft.Pieces[i].Coordinates[i2].X - 1
+		// Left
+	LeftOuterLoop:
+		for count := 1; count < 4; count++ {
+			newBoardXLeft := cloneBoard(board)
+			newBoardXLeft.Layer = board.Layer + 1
+			newPieceXLeft := newBoardXLeft.Pieces[i]
+
+			for i2 := 0; i2 < len(newPieceXLeft.Coordinates); i2++ {
+				newBoardXLeft.Pieces[i].Coordinates[i2].X = newBoardXLeft.Pieces[i].Coordinates[i2].X - count
+				if newBoardXLeft.Pieces[i].Coordinates[i2].X > (board.RowSize-1) || newBoardXLeft.Pieces[i].Coordinates[i2].X < 0 {
+					break LeftOuterLoop
+				}
+			}
+
+			if pieceValid(newPieceXLeft, newBoardXLeft, allBoardHashes) {
+				boards = append(boards, newBoardXLeft)
+				hash, _ := hashstructure.Hash(newBoardXLeft, nil)
+				allBoardHashes = append(allBoardHashes, hash)
+			} else {
+				break LeftOuterLoop
+			}
 		}
 
-		if pieceValid(pieceXLeft, newBoardXLeft, allBoardHashes) {
-			boards = append(boards, newBoardXLeft)
+		// Right
+	RightOuterLoop:
+		for count := 1; count < 4; count++ {
+			newBoardXRight := cloneBoard(board)
+			newBoardXRight.Layer = board.Layer + 1
+			newPieceXRight := newBoardXRight.Pieces[i]
+
+			for i2 := 0; i2 < len(newPieceXRight.Coordinates); i2++ {
+				newBoardXRight.Pieces[i].Coordinates[i2].X = newBoardXRight.Pieces[i].Coordinates[i2].X + count
+				if newBoardXRight.Pieces[i].Coordinates[i2].X > (board.RowSize-1) || newBoardXRight.Pieces[i].Coordinates[i2].X < 0 {
+					break RightOuterLoop
+				}
+			}
+
+			if pieceValid(newPieceXRight, newBoardXRight, allBoardHashes) {
+				boards = append(boards, newBoardXRight)
+				hash, _ := hashstructure.Hash(newBoardXRight, nil)
+				allBoardHashes = append(allBoardHashes, hash)
+			} else {
+				break RightOuterLoop
+			}
 		}
 
-		newBoardXRight := cloneBoard(board)
-		newBoardXRight.Layer = board.Layer + 1
-		pieceXRight := newBoardXRight.Pieces[i]
-		for i2 := 0; i2 < len(pieceXRight.Coordinates); i2++ {
-			newBoardXRight.Pieces[i].Coordinates[i2].X = newBoardXRight.Pieces[i].Coordinates[i2].X + 1
+		// Up
+	UpOuterLoop:
+		for count := 1; count < 6; count++ {
+			newBoardYUp := cloneBoard(board)
+			newBoardYUp.Layer = board.Layer + 1
+			newPieceYUp := newBoardYUp.Pieces[i]
+
+			for i2 := 0; i2 < len(newPieceYUp.Coordinates); i2++ {
+				newBoardYUp.Pieces[i].Coordinates[i2].Y = newBoardYUp.Pieces[i].Coordinates[i2].Y - count
+				if newBoardYUp.Pieces[i].Coordinates[i2].Y > (board.ColumnSize-1) || newBoardYUp.Pieces[i].Coordinates[i2].Y < 0 {
+					break UpOuterLoop
+				}
+			}
+
+			if pieceValid(newPieceYUp, newBoardYUp, allBoardHashes) {
+				boards = append(boards, newBoardYUp)
+				hash, _ := hashstructure.Hash(newBoardYUp, nil)
+				allBoardHashes = append(allBoardHashes, hash)
+			} else {
+				break UpOuterLoop
+			}
 		}
 
-		if pieceValid(pieceXRight, newBoardXRight, allBoardHashes) {
-			boards = append(boards, newBoardXRight)
-		}
+		// Down
+	DownOuterLoop:
+		for count := 1; count < 6; count++ {
+			newBoardYDown := cloneBoard(board)
+			newBoardYDown.Layer = board.Layer + 1
+			newPieceYDown := newBoardYDown.Pieces[i]
 
-		newBoardYUp := cloneBoard(board)
-		newBoardYUp.Layer = board.Layer + 1
-		pieceYUp := newBoardYUp.Pieces[i]
-		for i2 := 0; i2 < len(pieceYUp.Coordinates); i2++ {
-			newBoardYUp.Pieces[i].Coordinates[i2].Y = newBoardYUp.Pieces[i].Coordinates[i2].Y - 1
-		}
+			for i2 := 0; i2 < len(newPieceYDown.Coordinates); i2++ {
+				newBoardYDown.Pieces[i].Coordinates[i2].Y = newBoardYDown.Pieces[i].Coordinates[i2].Y + count
+				if newBoardYDown.Pieces[i].Coordinates[i2].Y > (board.ColumnSize-1) || newBoardYDown.Pieces[i].Coordinates[i2].Y < 0 {
+					break DownOuterLoop
+				}
+			}
 
-		if pieceValid(pieceYUp, newBoardYUp, allBoardHashes) {
-			boards = append(boards, newBoardYUp)
-		}
-
-		newBoardYDown := cloneBoard(board)
-		newBoardYDown.Layer = board.Layer + 1
-		pieceYDown := newBoardYDown.Pieces[i]
-		for i2 := 0; i2 < len(pieceYDown.Coordinates); i2++ {
-			newBoardYDown.Pieces[i].Coordinates[i2].Y = newBoardYDown.Pieces[i].Coordinates[i2].Y + 1
-		}
-
-		if pieceValid(pieceYDown, newBoardYDown, allBoardHashes) {
-			boards = append(boards, newBoardYDown)
+			if pieceValid(newPieceYDown, newBoardYDown, allBoardHashes) {
+				boards = append(boards, newBoardYDown)
+				hash, _ := hashstructure.Hash(newBoardYDown, nil)
+				allBoardHashes = append(allBoardHashes, hash)
+			} else {
+				break DownOuterLoop
+			}
 		}
 	}
 
-	return boards
+	return boards, allBoardHashes
 }
 
 func pieceValid(piece Piece, board Board, allBoardHashes []uint64) bool {

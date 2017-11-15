@@ -22,12 +22,9 @@ func Solve(board Board) {
 		// results := processBoards(pipe, allBoardHashes)
 
 		for i := 0; i < len(boards); i++ {
-			newBoards := makeMoves(boards[i], allBoardHashes)
+			var newBoards []Board
+			newBoards, allBoardHashes = makeMoves(boards[i], allBoardHashes)
 			nextBoards = append(nextBoards, newBoards...)
-			for _, newBoard := range newBoards {
-				hash, _ := hashstructure.Hash(newBoard, nil)
-				allBoardHashes = append(allBoardHashes, hash)
-			}
 
 			// newBoards := <-results
 			// nextBoards = append(nextBoards, newBoards...)
@@ -49,7 +46,7 @@ func Solve(board Board) {
 		if len(boards) > 0 {
 			fmt.Printf("Layer %v has %v board(s)\n", boards[0].Layer, len(boards))
 
-			// if nextBoards[0].Layer <= 20 {
+			// if nextBoards[0].Layer <= 5 {
 			// 	for _, board := range boards {
 			// 		PrintBoard(board)
 			// 		fmt.Println("")
@@ -65,24 +62,24 @@ func Solve(board Board) {
 	PrintBoard(solution)
 }
 
-func emitBoards(boards []Board) <-chan Board {
-	out := make(chan Board)
-	go func() {
-		for _, board := range boards {
-			out <- board
-		}
-		close(out)
-	}()
-	return out
-}
+// func emitBoards(boards []Board) <-chan Board {
+// 	out := make(chan Board)
+// 	go func() {
+// 		for _, board := range boards {
+// 			out <- board
+// 		}
+// 		close(out)
+// 	}()
+// 	return out
+// }
 
-func processBoards(in <-chan Board, allBoardHashes []uint64) <-chan []Board {
-	out := make(chan []Board)
-	go func() {
-		for board := range in {
-			out <- makeMoves(board, allBoardHashes)
-		}
-		close(out)
-	}()
-	return out
-}
+// func processBoards(in <-chan Board, allBoardHashes []uint64) <-chan []Board {
+// 	out := make(chan []Board)
+// 	go func() {
+// 		for board := range in {
+// 			out <- makeMoves(board, allBoardHashes)
+// 		}
+// 		close(out)
+// 	}()
+// 	return out
+// }

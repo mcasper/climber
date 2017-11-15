@@ -22,6 +22,140 @@ type Board struct {
 	Layer      int `hash:"ignore"`
 }
 
+var TenTwelveBoard = Board{
+	Layer:      0,
+	RowSize:    4,
+	ColumnSize: 6,
+	Pieces: []Piece{
+		Piece{
+			Id:    1,
+			Shape: "line",
+			Coordinates: []Coordinate{
+				Coordinate{
+					X: 0,
+					Y: 1,
+				},
+				Coordinate{
+					X: 0,
+					Y: 2,
+				},
+			},
+		},
+		Piece{
+			Id:    2,
+			Shape: "dot",
+			Coordinates: []Coordinate{
+				Coordinate{
+					X: 1,
+					Y: 2,
+				},
+			},
+		},
+		Piece{
+			Id:    3,
+			Shape: "l",
+			Coordinates: []Coordinate{
+				Coordinate{
+					X: 3,
+					Y: 1,
+				},
+				Coordinate{
+					X: 3,
+					Y: 2,
+				},
+				Coordinate{
+					X: 2,
+					Y: 2,
+				},
+			},
+		},
+		Piece{
+			Id:    4,
+			Shape: "l",
+			Coordinates: []Coordinate{
+				Coordinate{
+					X: 0,
+					Y: 3,
+				},
+				Coordinate{
+					X: 0,
+					Y: 4,
+				},
+				Coordinate{
+					X: 1,
+					Y: 3,
+				},
+			},
+		},
+		Piece{
+			Id:    5,
+			Shape: "dot",
+			Coordinates: []Coordinate{
+				Coordinate{
+					X: 2,
+					Y: 3,
+				},
+			},
+		},
+		Piece{
+			Id:    6,
+			Shape: "line",
+			Coordinates: []Coordinate{
+				Coordinate{
+					X: 3,
+					Y: 3,
+				},
+				Coordinate{
+					X: 3,
+					Y: 4,
+				},
+			},
+		},
+		Piece{
+			Id:    7,
+			Shape: "dot",
+			Coordinates: []Coordinate{
+				Coordinate{
+					X: 0,
+					Y: 5,
+				},
+			},
+		},
+		Piece{
+			Id:    8,
+			Shape: "dot",
+			Coordinates: []Coordinate{
+				Coordinate{
+					X: 3,
+					Y: 5,
+				},
+			},
+		},
+		Piece{
+			Id:    9,
+			Shape: "square",
+			Coordinates: []Coordinate{
+				Coordinate{
+					X: 1,
+					Y: 4,
+				},
+				Coordinate{
+					X: 1,
+					Y: 5,
+				},
+				Coordinate{
+					X: 2,
+					Y: 4,
+				},
+				Coordinate{
+					X: 2,
+					Y: 5,
+				},
+			},
+		},
+	},
+}
+
 var TenBoard = Board{
 	Layer:      0,
 	RowSize:    4,
