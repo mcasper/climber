@@ -6,6 +6,60 @@ import (
 	"github.com/mitchellh/hashstructure"
 )
 
+func TestAtFinishLine(t *testing.T) {
+	piece := Piece{
+		Shape: "square",
+		Coordinates: []Coordinate{
+			Coordinate{
+				X: 1,
+				Y: 0,
+			},
+			Coordinate{
+				X: 2,
+				Y: 0,
+			},
+			Coordinate{
+				X: 1,
+				Y: 1,
+			},
+			Coordinate{
+				X: 1,
+				Y: 2,
+			},
+		},
+	}
+
+	if !atFinishLine(piece) {
+		t.Error("Expected piece to be at the finish line")
+	}
+
+	piece = Piece{
+		Shape: "square",
+		Coordinates: []Coordinate{
+			Coordinate{
+				X: 1,
+				Y: 1,
+			},
+			Coordinate{
+				X: 2,
+				Y: 1,
+			},
+			Coordinate{
+				X: 1,
+				Y: 2,
+			},
+			Coordinate{
+				X: 1,
+				Y: 2,
+			},
+		},
+	}
+
+	if atFinishLine(piece) {
+		t.Error("Expected piece to not be at the finish line")
+	}
+}
+
 func TestCoordinateOverlaps(t *testing.T) {
 	allCoords := []Coordinate{
 		Coordinate{
