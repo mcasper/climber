@@ -1,6 +1,10 @@
 Climbpro-Go
 ===========
 
+```bash
+go run ./main.go
+```
+
 This repo is a solution to the Climbpro sliding block puzzle writtin in golang.
 
 10 board:
