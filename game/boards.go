@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"strconv"
 )
 
 type Coordinate struct {
@@ -346,6 +347,26 @@ func PrintBoard(board Board) {
 			fmt.Println("")
 		}
 	}
+}
+
+func hashBoard(board Board) string {
+	hash := ""
+	for _, piece := range board.Pieces {
+		hash = hash + hashPiece(piece)
+	}
+	return hash
+}
+
+func hashPiece(piece Piece) string {
+	hash := piece.Shape
+	for _, coordinate := range piece.Coordinates {
+		hash = hash + hashCoordinate(coordinate)
+	}
+	return hash
+}
+
+func hashCoordinate(coordinate Coordinate) string {
+	return "(" + strconv.Itoa(coordinate.X) + "," + strconv.Itoa(coordinate.Y) + ")"
 }
 
 func displayPiece(piece Piece) string {

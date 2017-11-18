@@ -1,10 +1,6 @@
 package game
 
-import (
-	// "fmt"
-
-	"github.com/mitchellh/hashstructure"
-)
+import ()
 
 func atFinishLine(piece Piece) bool {
 	return anyCoordinate(piece.Coordinates, func(c Coordinate) bool { return c.X == 1 && c.Y == 0 }) &&
@@ -21,7 +17,7 @@ func isSolution(board Board) bool {
 	return false
 }
 
-func makeMoves(board Board, allBoardHashes []uint64) ([]Board, []uint64) {
+func makeMoves(board Board, allBoardHashes map[string]int) ([]Board, map[string]int) {
 	boards := make([]Board, 0)
 
 	for i := 0; i < len(board.Pieces); i++ {
@@ -41,8 +37,8 @@ func makeMoves(board Board, allBoardHashes []uint64) ([]Board, []uint64) {
 
 			if pieceValid(newPieceXLeft, newBoardXLeft, allBoardHashes) {
 				boards = append(boards, newBoardXLeft)
-				hash, _ := hashstructure.Hash(newBoardXLeft, nil)
-				allBoardHashes = append(allBoardHashes, hash)
+				hash := hashBoard(newBoardXLeft)
+				allBoardHashes[hash] = 1
 			} else {
 				break LeftOuterLoop
 			}
@@ -64,8 +60,8 @@ func makeMoves(board Board, allBoardHashes []uint64) ([]Board, []uint64) {
 
 			if pieceValid(newPieceXRight, newBoardXRight, allBoardHashes) {
 				boards = append(boards, newBoardXRight)
-				hash, _ := hashstructure.Hash(newBoardXRight, nil)
-				allBoardHashes = append(allBoardHashes, hash)
+				hash := hashBoard(newBoardXRight)
+				allBoardHashes[hash] = 1
 			} else {
 				break RightOuterLoop
 			}
@@ -87,8 +83,8 @@ func makeMoves(board Board, allBoardHashes []uint64) ([]Board, []uint64) {
 
 			if pieceValid(newPieceYUp, newBoardYUp, allBoardHashes) {
 				boards = append(boards, newBoardYUp)
-				hash, _ := hashstructure.Hash(newBoardYUp, nil)
-				allBoardHashes = append(allBoardHashes, hash)
+				hash := hashBoard(newBoardYUp)
+				allBoardHashes[hash] = 1
 			} else {
 				break UpOuterLoop
 			}
@@ -110,8 +106,8 @@ func makeMoves(board Board, allBoardHashes []uint64) ([]Board, []uint64) {
 
 			if pieceValid(newPieceYDown, newBoardYDown, allBoardHashes) {
 				boards = append(boards, newBoardYDown)
-				hash, _ := hashstructure.Hash(newBoardYDown, nil)
-				allBoardHashes = append(allBoardHashes, hash)
+				hash := hashBoard(newBoardYDown)
+				allBoardHashes[hash] = 1
 			} else {
 				break DownOuterLoop
 			}
@@ -121,9 +117,9 @@ func makeMoves(board Board, allBoardHashes []uint64) ([]Board, []uint64) {
 	return boards, allBoardHashes
 }
 
-func pieceValid(piece Piece, board Board, allBoardHashes []uint64) bool {
-	hash, _ := hashstructure.Hash(board, nil)
-	if includesHash(allBoardHashes, hash) {
+func pieceValid(piece Piece, board Board, allBoardHashes map[string]int) bool {
+	hash := hashBoard(board)
+	if allBoardHashes[hash] == 1 {
 		return false
 	}
 

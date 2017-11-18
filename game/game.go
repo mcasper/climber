@@ -2,36 +2,28 @@ package game
 
 import (
 	"fmt"
-
-	"github.com/mitchellh/hashstructure"
+	"time"
 )
 
 func Solve(board Board) {
 	boards := make([]Board, 1)
-	allBoardHashes := make([]uint64, 1)
+	allBoardHashes := make(map[string]int, 1)
 	boards[0] = board
-	firstHash, _ := hashstructure.Hash(board, nil)
-	allBoardHashes[0] = firstHash
+	firstHash := hashBoard(board)
+	allBoardHashes[firstHash] = 1
 	solving := true
 	var solution Board
+	start := time.Now()
+	fmt.Println("Starting board:")
+	PrintBoard(board)
 
 	for solving {
 		nextBoards := make([]Board, 0)
-
-		// pipe := emitBoards(boards)
-		// results := processBoards(pipe, allBoardHashes)
 
 		for i := 0; i < len(boards); i++ {
 			var newBoards []Board
 			newBoards, allBoardHashes = makeMoves(boards[i], allBoardHashes)
 			nextBoards = append(nextBoards, newBoards...)
-
-			// newBoards := <-results
-			// nextBoards = append(nextBoards, newBoards...)
-			// for board := range newBoards {
-			// 	hash, _ := hashstructure.Hash(board, nil)
-			// 	allBoardHashes = append(allBoardHashes, hash)
-			// }
 		}
 
 		for _, newBoard := range nextBoards {
@@ -44,14 +36,8 @@ func Solve(board Board) {
 
 		boards = nextBoards
 		if len(boards) > 0 {
-			fmt.Printf("Layer %v has %v board(s)\n", boards[0].Layer, len(boards))
-
-			// if nextBoards[0].Layer <= 5 {
-			// 	for _, board := range boards {
-			// 		PrintBoard(board)
-			// 		fmt.Println("")
-			// 	}
-			// }
+			t := time.Now()
+			fmt.Printf("Layer %v has %v board(s) - %v\n", boards[0].Layer, len(boards), t.Sub(start))
 		} else {
 			fmt.Println("No more boards :(")
 			return
@@ -61,25 +47,3 @@ func Solve(board Board) {
 	fmt.Println("Solved it!")
 	PrintBoard(solution)
 }
-
-// func emitBoards(boards []Board) <-chan Board {
-// 	out := make(chan Board)
-// 	go func() {
-// 		for _, board := range boards {
-// 			out <- board
-// 		}
-// 		close(out)
-// 	}()
-// 	return out
-// }
-
-// func processBoards(in <-chan Board, allBoardHashes []uint64) <-chan []Board {
-// 	out := make(chan []Board)
-// 	go func() {
-// 		for board := range in {
-// 			out <- makeMoves(board, allBoardHashes)
-// 		}
-// 		close(out)
-// 	}()
-// 	return out
-// }

@@ -2,8 +2,6 @@ package game
 
 import (
 	"testing"
-
-	"github.com/mitchellh/hashstructure"
 )
 
 func TestAtFinishLine(t *testing.T) {
@@ -135,8 +133,9 @@ func TestPieceValid(t *testing.T) {
 		},
 	}
 
-	hash, _ := hashstructure.Hash(board, nil)
-	existingHashes := []uint64{hash}
+	hash := hashBoard(board)
+	existingHashes := make(map[string]int, 1)
+	existingHashes[hash] = 1
 
 	board.Pieces[0].Coordinates[0].X = 3
 
